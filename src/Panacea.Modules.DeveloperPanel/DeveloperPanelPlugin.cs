@@ -42,20 +42,14 @@ namespace Panacea.Modules.DeveloperPanel
 
         private void Ui_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (Debugger.IsAttached)
-            {
-                if (e.Key == System.Windows.Input.Key.Escape)
-                {
-                    e.Handled = true;
-                    if (_core.TryGetUiManager(out IUiManager ui))
-                    {
-                        ui.Navigate(new DeveloperPanelControlViewModel(_core), false);
-                    }
-                }
-            }
-            else
-            {
 
+            if (e.Key == System.Windows.Input.Key.Escape)
+            {
+                e.Handled = true;
+                if (_core.TryGetUiManager(out IUiManager ui))
+                {
+                    ui.Navigate(new DeveloperPanelControlViewModel(_core), false);
+                }
             }
         }
 
