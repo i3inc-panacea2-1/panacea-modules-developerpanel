@@ -1,0 +1,508 @@
+﻿<UserControl
+    x:Class="Panacea.Modules.DeveloperPanel.DeveloperPanelControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Panacea.Modules.DeveloperPanel"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pcontrols="clr-namespace:Panacea.Controls;assembly=Panacea.Controls"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="White"
+    mc:Ignorable="d">
+    <TabControl pcontrols:Material.HighlightEnabled="True">
+        <TabControl.Resources>
+            <Style TargetType="{x:Type TabPanel}">
+                <Setter Property="HorizontalAlignment" Value="Center" />
+            </Style>
+        </TabControl.Resources>
+        <TabItem Header="General Info">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <pcontrols:Card Margin="10">
+                    <ListView Name="generalLst" BorderThickness="0">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                    Width="auto"
+                                    DisplayMemberBinding="{Binding Key}"
+                                    Header="Name" />
+                                <GridViewColumn
+                                    Width="auto"
+                                    DisplayMemberBinding="{Binding Value}"
+                                    Header="Value" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </pcontrols:Card>
+
+                <UniformGrid
+                    Grid.Row="1"
+                    Margin="0,0,0,4"
+                    Rows="1">
+                    <Button Name="exit" Margin="3">
+                        Exit
+                    </Button>
+                    <Button Name="restart" Margin="3">
+                        Restart
+                    </Button>
+                    <Button Name="restartWithUser" Margin="3">
+                        Restart (with user)
+                    </Button>
+                    <Button Name="newwindow" Margin="3">
+                        Open in window
+                    </Button>
+                </UniformGrid>
+
+            </Grid>
+
+        </TabItem>
+        <TabItem Header="Logs">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <ComboBox
+                    Name="types"
+                    Margin="12,2"
+                    pcontrols:Material.Label="Filter" />
+                <pcontrols:Card Grid.Row="1" Margin="10">
+                    <ListView x:Name="listView" ItemsSource="{Binding Logs}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding Time}" Header="Id" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Sender}" Header="Sender" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Message}" Header="Message" />
+                                <GridViewColumn DisplayMemberBinding="{Binding LogType}" Header="Type" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </pcontrols:Card>
+
+            </Grid>
+
+        </TabItem>
+        <TabItem Header="Loaded Modules">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <StackPanel Margin="10" Orientation="Horizontal">
+                    <Rectangle
+                        Width="40"
+                        Margin="0,2,2,2"
+                        Fill="LightGray" />
+                    <TextBlock Margin="5" Text="Loaded correctly" />
+                    <Rectangle
+                        Width="40"
+                        Margin="15,2,2,2"
+                        Fill="OrangeRed" />
+                    <TextBlock Margin="5" Text="Loaded but different version" />
+                    <Rectangle
+                        Width="40"
+                        Margin="15,2,2,2"
+                        Fill="Red" />
+                    <TextBlock Margin="5" Text="Not loaded" />
+                </StackPanel>
+                <pcontrols:Card Grid.Row="1" Margin="10">
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly">
+                        <ItemsControl ItemsSource="{Binding Plugins}" Margin="0,0,0,140">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="2" Background="{Binding Background}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock
+                                            Margin="2"
+                                            Text="{Binding Name}"
+                                            TextAlignment="Center" />
+                                        <StackPanel
+                                            Grid.Row="1"
+                                            HorizontalAlignment="Center"
+                                            Orientation="Horizontal">
+                                            <TextBlock
+                                                Margin="2"
+                                                Text="Server:"
+                                                TextAlignment="Center" />
+                                            <TextBlock
+                                                Margin="2"
+                                                Text="{Binding Version}"
+                                                TextAlignment="Center" />
+                                            <TextBlock
+                                                Margin="2"
+                                                Text=" - "
+                                                TextAlignment="Center" />
+                                            <TextBlock
+                                                Margin="2"
+                                                Text="Loaded:"
+                                                TextAlignment="Center" />
+                                            <TextBlock
+                                                Margin="2"
+                                                Text="{Binding RealVersion}"
+                                                TextAlignment="Center" />
+                                        </StackPanel>
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            MaxHeight="200"
+                                            Margin="2"
+                                            Text="{Binding Error}"
+                                            TextAlignment="Left"
+                                            TextWrapping="Wrap" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid VerticalAlignment="Top" Columns="4" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </pcontrols:Card>
+
+            </Grid>
+
+        </TabItem>
+
+        <TabItem Header="Hardware">
+            <TabControl pcontrols:Material.HighlightEnabled="True">
+                <TabControl.Resources>
+                    <Style TargetType="{x:Type TabPanel}">
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                    </Style>
+                </TabControl.Resources>
+                <TabItem Header="Unit">
+                    <pcontrols:Card HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel Margin="30" HorizontalAlignment="Center">
+                            <TextBlock
+                                Name="unitType"
+                                Margin="10"
+                                TextAlignment="Center" />
+                            <CheckBox
+                                Name="led"
+                                Margin="10"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Content="LED">
+                                <CheckBox.LayoutTransform>
+                                    <ScaleTransform ScaleX="3" ScaleY="3" />
+                                </CheckBox.LayoutTransform>
+                            </CheckBox>
+                            <CheckBox
+                                Name="handset"
+                                Margin="10"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Content="Handset"
+                                IsEnabled="False">
+                                <CheckBox.LayoutTransform>
+                                    <ScaleTransform ScaleX="3" ScaleY="3" />
+                                </CheckBox.LayoutTransform>
+                            </CheckBox>
+                            <Button Name="BtnStartRinging" Content="Start Ringing" />
+                            <Button Name="BtnStopRinging" Content="Stop Ringing" />
+                            <Button
+                                Name="BtnRestart"
+                                Margin="0,10"
+                                Content="Restart" />
+                        </StackPanel>
+                    </pcontrols:Card>
+                </TabItem>
+                <TabItem Header="Rfid Readers">
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            Name="rfidreaders"
+                            Margin="10"
+                            TextAlignment="Center" />
+                        <pcontrols:Card Grid.Row="1" Margin="10,0">
+                            <ListView Name="readers">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn
+                                            Width="250"
+                                            DisplayMemberBinding="{Binding Name}"
+                                            Header="Reader" />
+                                        <GridViewColumn
+                                            Width="350"
+                                            DisplayMemberBinding="{Binding Card}"
+                                            Header="Card" />
+
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </pcontrols:Card>
+
+                        <StackPanel
+                            Grid.Row="2"
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal">
+
+                            <Button
+                                Name="simulateCardTap"
+                                Margin="2"
+                                VerticalAlignment="Center"
+                                Content="Tap card!" />
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+
+        </TabItem>
+        <TabItem Header="Web Sockets">
+            <pcontrols:Card
+                Margin="250,10"
+                Padding="10"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <TextBox Name="VerbText" pcontrols:Material.Label="Action" />
+                        <TextBox
+                            Name="JsonText"
+                            Height="80"
+                            HorizontalAlignment="Stretch"
+                            pcontrols:Material.Label="JSON"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap" />
+                        <TextBox
+                            Name="ReplyText"
+                            Height="250"
+                            HorizontalAlignment="Stretch"
+                            pcontrols:Material.Label="Reply"
+                            AcceptsReturn="True" />
+
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" Text="Panacea" />
+                        <Rectangle
+                            Name="LineLocal"
+                            Width="100"
+                            Height="3"
+                            Margin="5,10,5,0"
+                            HorizontalAlignment="Center"
+                            Fill="Red"
+                            Stroke="Transparent" />
+                        <TextBlock VerticalAlignment="Center" Text="WebSocket Server" />
+                        <Rectangle
+                            Name="LineHospital"
+                            Width="100"
+                            Height="3"
+                            Margin="5,5,5,0"
+                            HorizontalAlignment="Center"
+                            Fill="Red"
+                            Stroke="Transparent" />
+                        <TextBlock
+                            Margin="0,5"
+                            VerticalAlignment="Center"
+                            Text="Hospital" />
+
+
+                    </StackPanel>
+                </StackPanel>
+            </pcontrols:Card>
+        </TabItem>
+
+        <TabItem Name="MasterSlaveTab" Header="Terminal Connection">
+            <pcontrols:Card HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        Name="TerminalIp"
+                        Margin="5"
+                        VerticalAlignment="Center"
+                        Text="" />
+                    <TextBlock
+                        Name="TerminalRoleText"
+                        Margin="5"
+                        VerticalAlignment="Center"
+                        Text="" />
+                    <Rectangle
+                        Name="LineTerminalConnection"
+                        Width="100"
+                        Height="8"
+                        Margin="5,10,5,10"
+                        HorizontalAlignment="Center"
+                        Fill="Yellow"
+                        Stroke="Transparent" />
+
+                    <TextBlock
+                        Name="RemoteTerminalText"
+                        Margin="5"
+                        VerticalAlignment="Center"
+                        Text="" />
+                    <TextBlock
+                        Name="RemoteTerminalIp"
+                        Margin="5"
+                        VerticalAlignment="Center"
+                        Text="" />
+
+
+                </StackPanel>
+            </pcontrols:Card>
+        </TabItem>
+
+        <TabItem Header="Console">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1.2*" />
+                    <RowDefinition Height="1*" />
+
+                </Grid.RowDefinitions>
+
+                <DockPanel>
+
+                    <Menu DockPanel.Dock="Top">
+                        <MenuItem ToolTip="Execute code.">
+                            <MenuItem.Header>
+                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                    <Image
+                                        Height="18"
+                                        Margin="0,1,0,0"
+                                        VerticalAlignment="Center"
+                                        RenderOptions.BitmapScalingMode="Fant"
+                                        Source="pack://application:,,,/Panacea.Modules.DeveloperPanel;component/images/run.png" />
+                                    <TextBlock Margin="3,0,3,0" VerticalAlignment="Center">Run</TextBlock>
+                                </StackPanel>
+                            </MenuItem.Header>
+
+                        </MenuItem>
+                        <MenuItem Name="ScriptsBox" Header="Open Script" />
+                    </Menu>
+
+                    <avalonEdit:TextEditor
+                        xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+                        Name="Input"
+                        Grid.Row="1"
+                        Padding="10"
+                        FontFamily="Consolas"
+                        FontSize="10pt"
+                        ShowLineNumbers="True"
+                        SyntaxHighlighting="C#"
+                        WordWrap="True">
+                        <avalonEdit:TextEditor.Options>
+                            <avalonEdit:TextEditorOptions
+                                ShowEndOfLine="True"
+                                ShowSpaces="True"
+                                ShowTabs="True" />
+                        </avalonEdit:TextEditor.Options>
+                    </avalonEdit:TextEditor>
+                </DockPanel>
+
+
+
+                <pcontrols:Card Grid.Row="2" Margin="10">
+                    <ScrollViewer
+                        Name="ConsoleScroll"
+                        HorizontalScrollBarVisibility="Disabled"
+                        VerticalScrollBarVisibility="Auto">
+                        <TextBlock
+                            Name="Output"
+                            VerticalAlignment="Stretch"
+                            Background="#111"
+                            FontFamily="Consolas"
+                            Foreground="LimeGreen" />
+                    </ScrollViewer>
+                </pcontrols:Card>
+
+
+
+
+            </Grid>
+
+        </TabItem>
+        <TabItem Header="Ticketing">
+            <Grid Background="#f6f6f6">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+
+                </Grid.RowDefinitions>
+                <ScrollViewer>
+                    <pcontrols:Card Margin="250,10">
+                        <Grid Grid.Row="1" VerticalAlignment="Top">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="2*" />
+                                <RowDefinition Height="2*" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+
+                            <ComboBox
+                                Name="cmbKey"
+                                Grid.Column="1"
+                                Margin="10"
+                                pcontrols:Material.Label="Api key"
+                                IsEditable="True"
+                                SelectedIndex="0">
+                                <ComboBox.Items>
+                                    <ComboBoxItem Content="- Please select -" />
+                                    <ComboBoxItem Content="Dot by dot" Tag="d6a834858ed5ae9e821dc86edb00f882deeb50f4" />
+                                    <ComboBoxItem Content="i3 inc" Tag="f52f7ddd18d5553927316f5a1da1a00e6eb1ae5a" />
+                                </ComboBox.Items>
+                            </ComboBox>
+
+                            <TextBox
+                                Name="txtTitle"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="10"
+                                VerticalAlignment="Stretch"
+                                VerticalContentAlignment="Center"
+                                pcontrols:Material.Label="Subject"
+                                AcceptsReturn="False" />
+
+                            <TextBox
+                                Name="txtDescription"
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="10"
+                                VerticalAlignment="Stretch"
+                                pcontrols:Material.Label="Descritpion"
+                                AcceptsReturn="True"
+                                ScrollViewer.VerticalScrollBarVisibility="Visible" />
+
+                            <TextBox
+                                Name="txtSteps"
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Margin="10"
+                                VerticalAlignment="Stretch"
+                                pcontrols:Material.Label="Steps to reproduce (1 per line)"
+                                AcceptsReturn="True"
+                                ScrollViewer.VerticalScrollBarVisibility="Visible" />
+
+                        </Grid>
+                    </pcontrols:Card>
+                </ScrollViewer>
+                <Button
+                    Grid.Row="1"
+                    Margin="10"
+                    HorizontalAlignment="Center"
+                    Style="{DynamicResource PrimaryButton}">
+                    Submit
+                </Button>
+
+            </Grid>
+
+        </TabItem>
+    </TabControl>
+
+</UserControl>
