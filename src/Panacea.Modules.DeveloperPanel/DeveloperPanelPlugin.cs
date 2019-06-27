@@ -1,6 +1,7 @@
 ﻿using Panacea.Core;
 using Panacea.Modularity;
 using Panacea.Modularity.UiManager;
+using Panacea.Modules.DeveloperPanel.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,7 +15,7 @@ namespace Panacea.Modules.DeveloperPanel
     public class DeveloperPanelPlugin : IPlugin
     {
         private readonly PanaceaServices _core;
-
+        NavigationButtonViewModel _button;
         public DeveloperPanelPlugin(PanaceaServices core)
         {
             _core = core;
@@ -36,6 +37,8 @@ namespace Panacea.Modules.DeveloperPanel
             if (_core.TryGetUiManager(out IUiManager ui))
             {
                 ui.PreviewKeyDown += Ui_PreviewKeyDown;
+                _button = new NavigationButtonViewModel(_core);
+                ui.AddNavigationBarControl(_button);
             }
             return Task.CompletedTask;
         }
@@ -55,17 +58,9 @@ namespace Panacea.Modules.DeveloperPanel
 
         public Task Shutdown()
         {
-            var control = new DeveloperPanelControlViewModel(_core);
-            if (Debugger.IsAttached)
+            if (_button != null && _core.TryGetUiManager(out IUiManager ui))
             {
-                var window = new Window()
-                {
-                    Content = new DeveloperPanelControl()
-                    {
-                        DataContext = control
-                    }
-                };
-                window.Show();
+                ui.RemoveNavigationBarControl(_button);
             }
             return Task.CompletedTask;
         }

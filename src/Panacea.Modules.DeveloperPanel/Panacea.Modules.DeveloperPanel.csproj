@@ -85,6 +85,14 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ViewModels\MagicPinViewModel.cs" />
+    <Compile Include="ViewModels\NavigationButtonViewModel.cs" />
+    <Compile Include="Views\MagicPinPage.xaml.cs">
+      <DependentUpon>MagicPinPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NavigationButton.xaml.cs">
+      <DependentUpon>NavigationButton.xaml</DependentUpon>
+    </Compile>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -100,6 +108,14 @@
       <DependentUpon>DeveloperPanelControl.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\MagicPinPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NavigationButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeveloperPanelControlViewModel.cs" />
@@ -146,6 +162,8 @@
     <Resource Include="Images\functions.png" />
     <Resource Include="Images\run.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Images\logo-small.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
