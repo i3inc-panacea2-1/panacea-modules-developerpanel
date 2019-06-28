@@ -11,6 +11,14 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
     [View(typeof(MagicPinPage))]
     class MagicPinViewModel : ViewModelBase
     {
+
+        public MagicPinViewModel()
+        {
+            MachineName = Environment.MachineName;
+        }
+
+        public string MachineName { get; set; }
+
         bool _unlocked;
         public bool Unlocked
         {

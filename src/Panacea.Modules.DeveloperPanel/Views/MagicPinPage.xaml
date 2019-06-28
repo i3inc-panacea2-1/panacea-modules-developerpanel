@@ -16,27 +16,32 @@
     <StackPanel Margin="50,50,50,90" VerticalAlignment="Center">
         <StackPanel VerticalAlignment="Center">
             <TextBlock
-                
+                Margin="10"
+                FontSize="{DynamicResource FontSize-Xx-Large}"
+                Foreground="White"
+                Text="{Binding MachineName}"
+                TextAlignment="Center" />
+            <TextBlock
                 Margin="10"
                 FontSize="{DynamicResource FontSize-Large}"
                 Foreground="White"
                 Text="Please type the magic PIN"
                 TextAlignment="Center"
                 TextWrapping="Wrap" />
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" >
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <TextBox
-                    FontSize="{DynamicResource FontSize-Large}"
-                    Foreground="White"
-                    pcontrols:Material.Label="PIN"
                     Width="120"
-                    HorizontalAlignment="Center" />
-                <Button
-                    VerticalAlignment="Center"
                     HorizontalAlignment="Center"
+                    pcontrols:Material.Label="PIN"
+                    FontSize="{DynamicResource FontSize-Large}"
+                    Foreground="White" />
+                <Button
+                    Margin="10,0,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
                     Background="#233"
                     Content="Submit"
-                    Margin="10 0 0 0"
-                    Foreground="White"/>
+                    Foreground="White" />
             </StackPanel>
 
             <TextBlock
@@ -52,17 +57,17 @@
             Orientation="Horizontal"
             Visibility="{Binding Unlocked, Converter={StaticResource BoolToVis}}">
             <Button
-                Foreground="White"
                 Name="DevPage"
                 Margin="5"
                 Background="#233"
-                Content="Debug Info" />
+                Content="Debug Info"
+                Foreground="White" />
             <Button
-                Foreground="White"
                 Name="Launcher"
                 Margin="5"
                 Background="#233"
-                Content="Launcher" />
+                Content="Launcher"
+                Foreground="White" />
         </StackPanel>
     </StackPanel>
 </UserControl>
