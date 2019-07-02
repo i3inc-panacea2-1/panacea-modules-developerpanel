@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Panacea.Modules.DeveloperPanel
 {
@@ -43,15 +44,54 @@ namespace Panacea.Modules.DeveloperPanel
             return Task.CompletedTask;
         }
 
+        int _showDev = 0;
+
         private void Ui_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-
-            if (e.Key == System.Windows.Input.Key.Escape)
+            if (Debugger.IsAttached)
             {
-                e.Handled = true;
-                if (_core.TryGetUiManager(out IUiManager ui))
+                if (e.Key == Key.Escape)
                 {
-                    ui.Navigate(new DeveloperPanelControlViewModel(_core), false);
+                    e.Handled = true;
+                    if (_core.TryGetUiManager(out IUiManager ui))
+                    {
+                        ui.Navigate(new DeveloperPanelControlViewModel(_core), false);
+                    }
+                }
+            }
+            else
+            {
+                if (new Key[] { Key.VolumeMute, Key.VolumeUp, Key.VolumeDown }.Contains(e.Key))
+                {
+                    e.Handled = true;
+                    return;
+                }
+                if (Keyboard.IsKeyDown(Key.LeftCtrl)
+                     && Keyboard.IsKeyDown(Key.Q))
+                {
+
+                    if (e.Key == Key.D7 && _showDev == 0)
+                    {
+                        _showDev = 1;
+                        e.Handled = true;
+                        return;
+                    }
+                    if (e.Key == Key.D8 && _showDev == 1)
+                    {
+                        _showDev = 2;
+                        e.Handled = true;
+                        return;
+                    }
+                    if (e.Key == Key.D9 && _showDev == 2)
+                    {
+                        e.Handled = true;
+                        if (_core.TryGetUiManager(out IUiManager ui))
+                        {
+                            ui.Navigate(new DeveloperPanelControlViewModel(_core), false);
+                        }
+                        _showDev = 0;
+                        return;
+                    }
                 }
             }
         }
