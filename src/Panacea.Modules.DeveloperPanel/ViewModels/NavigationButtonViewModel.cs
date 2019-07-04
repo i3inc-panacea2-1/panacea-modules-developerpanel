@@ -15,13 +15,13 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
     [View(typeof(NavigationButton))]
     class NavigationButtonViewModel : ViewModelBase
     {
-        public NavigationButtonViewModel(PanaceaServices core)
+        public NavigationButtonViewModel(PanaceaServices core, DeveloperPanelPlugin plugin)
         {
             ClickCommand = new RelayCommand(args =>
             {
                 if (core.TryGetUiManager(out IUiManager ui))
                 {
-                    ui.Navigate(new MagicPinViewModel(), false);
+                    ui.Navigate(new MagicPinViewModel(plugin), false);
                 }
             });
         }
