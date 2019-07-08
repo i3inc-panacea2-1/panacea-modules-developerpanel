@@ -35,11 +35,22 @@ namespace Panacea.Modules.DeveloperPanel
 
         public Task EndInit()
         {
-            if (_core.TryGetUiManager(out IUiManager ui))
+            if (Debugger.IsAttached)
             {
-                ui.PreviewKeyDown += Ui_PreviewKeyDown;
-                _button = new NavigationButtonViewModel(_core);
-                ui.AddNavigationBarControl(_button);
+                var w = new Window()
+                {
+                    Content = new DeveloperPanelControlViewModel(_core).View
+                };
+                w.Show();
+            }
+            else
+            {
+                if (_core.TryGetUiManager(out IUiManager ui))
+                {
+                    ui.PreviewKeyDown += Ui_PreviewKeyDown;
+                    _button = new NavigationButtonViewModel(_core);
+                    ui.AddNavigationBarControl(_button);
+                }
             }
             return Task.CompletedTask;
         }
