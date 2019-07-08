@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </UserControl.Resources>
-    <StackPanel Margin="50,50,50,90" VerticalAlignment="Center">
+    <StackPanel  VerticalAlignment="Center">
         <StackPanel VerticalAlignment="Center">
             <TextBlock
                 Margin="10"
@@ -34,12 +34,15 @@
                     HorizontalAlignment="Center"
                     pcontrols:Material.Label="PIN"
                     FontSize="{DynamicResource FontSize-Large}"
-                    Foreground="White" />
+                    Foreground="White"
+                    InputScope="Number"
+                    Text="{Binding Pin, UpdateSourceTrigger=PropertyChanged}" />
                 <Button
                     Margin="10,0,0,0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Background="#233"
+                    Command="{Binding UnlockCommand}"
                     Content="Submit"
                     Foreground="White" />
             </StackPanel>
@@ -47,7 +50,7 @@
             <TextBlock
                 FontSize="{DynamicResource FontSize-Large}"
                 Foreground="Red"
-                Text="{Binding ElementName=Main, Path=Tag}"
+                Text="{Binding Error}"
                 TextAlignment="Center"
                 TextWrapping="Wrap" />
 
@@ -60,13 +63,16 @@
                 Name="DevPage"
                 Margin="5"
                 Background="#233"
+                Command="{Binding ShowDevPageCommand}"
                 Content="Debug Info"
+                FontSize="{DynamicResource FontSize-Large}"
                 Foreground="White" />
             <Button
                 Name="Launcher"
                 Margin="5"
                 Background="#233"
                 Content="Launcher"
+                FontSize="{DynamicResource FontSize-Large}"
                 Foreground="White" />
         </StackPanel>
     </StackPanel>

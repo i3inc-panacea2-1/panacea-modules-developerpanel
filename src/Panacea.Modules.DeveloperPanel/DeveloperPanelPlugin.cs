@@ -47,15 +47,23 @@ namespace Panacea.Modules.DeveloperPanel
             {
                 if (_core.TryGetUiManager(out IUiManager ui))
                 {
-                    ui.PreviewKeyDown += Ui_PreviewKeyDown;
-                    _button = new NavigationButtonViewModel(_core);
-                    ui.AddNavigationBarControl(_button);
+                ui.PreviewKeyDown += Ui_PreviewKeyDown;
+                _button = new NavigationButtonViewModel(_core, this);
+                ui.AddNavigationBarControl(_button);
                 }
             }
             return Task.CompletedTask;
         }
 
         int _showDev = 0;
+
+        internal void ShowDevPage()
+        {
+            if (_core.TryGetUiManager(out IUiManager ui))
+            {
+                ui.Navigate(new DeveloperPanelControlViewModel(_core), false);
+            }
+        }
 
         private void Ui_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
@@ -64,10 +72,7 @@ namespace Panacea.Modules.DeveloperPanel
                 if (e.Key == Key.Escape)
                 {
                     e.Handled = true;
-                    if (_core.TryGetUiManager(out IUiManager ui))
-                    {
-                        ui.Navigate(new DeveloperPanelControlViewModel(_core), false);
-                    }
+                    ShowDevPage();
                 }
             }
             else
@@ -96,10 +101,7 @@ namespace Panacea.Modules.DeveloperPanel
                     if (e.Key == Key.D9 && _showDev == 2)
                     {
                         e.Handled = true;
-                        if (_core.TryGetUiManager(out IUiManager ui))
-                        {
-                            ui.Navigate(new DeveloperPanelControlViewModel(_core), false);
-                        }
+                        ShowDevPage();
                         _showDev = 0;
                         return;
                     }
