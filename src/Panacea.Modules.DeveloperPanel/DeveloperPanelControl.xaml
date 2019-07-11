@@ -44,16 +44,28 @@
                     Grid.Row="1"
                     Margin="0,0,0,4"
                     Rows="1">
-                    <Button Name="exit" Margin="3">
+                    <Button
+                        Name="exit"
+                        Margin="3"
+                        Command="{Binding ExitCommand}">
                         Exit
                     </Button>
-                    <Button Name="restart" Margin="3">
+                    <Button
+                        Name="restart"
+                        Margin="3"
+                        Command="{Binding RestartCommand}">
                         Restart
                     </Button>
-                    <Button Name="restartWithUser" Margin="3">
+                    <Button
+                        Name="restartWithUser"
+                        Margin="3"
+                        Command="{Binding RestartWithUserCommand}">
                         Restart (with user)
                     </Button>
-                    <Button Name="newwindow" Margin="3">
+                    <Button
+                        Name="newwindow"
+                        Margin="3"
+                        Command="{Binding OpenInWindowCommand}">
                         Open in window
                     </Button>
                 </UniformGrid>
@@ -113,7 +125,7 @@
                 </StackPanel>
                 <pcontrols:Card Grid.Row="1" Margin="10">
                     <ScrollViewer HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly">
-                        <ItemsControl ItemsSource="{Binding Plugins}" Margin="0,0,0,140">
+                        <ItemsControl Margin="0,0,0,140" ItemsSource="{Binding Plugins}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="2" Background="{Binding Background}">

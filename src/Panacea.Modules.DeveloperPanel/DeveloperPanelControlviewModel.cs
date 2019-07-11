@@ -1,4 +1,6 @@
-﻿using Panacea.Core;
+﻿using Panacea.Controls;
+using Panacea.Core;
+using Panacea.Modularity.UiManager;
 using Panacea.Modules.DeveloperPanel.Models;
 using Panacea.Mvvm;
 using System;
@@ -43,8 +45,50 @@ namespace Panacea.Modules.DeveloperPanel
         {
             _logger = core.Logger;
             _core = core;
+            SetupCommands();
         }
 
+        private void SetupCommands()
+        {
+            ExitCommand = new RelayCommand(args =>
+            {
+                ShutDownSafe();
+            });
+            RestartCommand = new RelayCommand(async args =>
+            {
+                await _core.UserService.LogoutAsync();
+                ShutDownSafe();
+            });
+            RestartWithUserCommand = new RelayCommand(args =>
+            {
+                ShutDownSafe();
+            });
+            OpenInWindowCommand = new RelayCommand(args =>
+            {
+                var w = new Window()
+                {
+                    Content = this.View
+                };
+                w.Show();
+                if(_core.TryGetUiManager(out IUiManager ui))
+                {
+                    ui.GoHome();
+                }
+            });
+        }
+        private void ShutDownSafe()
+        {
+            if (Application.Current.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
+            {
+                Application.Current.Dispatcher.BeginInvoke(new Action(() => Application.Current.Shutdown()));
+            }
+            else Application.Current.Shutdown();
+        }
+
+        public RelayCommand ExitCommand { get; set; }
+        public RelayCommand RestartCommand { get; set; }
+        public RelayCommand RestartWithUserCommand { get; set; }
+        public RelayCommand OpenInWindowCommand { get; set; }
         public override void Activate()
         {
             HookLogs();
