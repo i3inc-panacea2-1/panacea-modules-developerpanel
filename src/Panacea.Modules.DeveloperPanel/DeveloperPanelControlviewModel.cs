@@ -6,6 +6,7 @@ using Panacea.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -110,7 +111,7 @@ namespace Panacea.Modules.DeveloperPanel
                     Name = p.Key,
                     ClassName = p.Value.GetType().FullName,
                     FileName = p.Value.GetType().Assembly.Location,
-                    Version = ""
+                    Version = FileVersionInfo.GetVersionInfo(p.Value.GetType().Assembly.Location).FileVersion.ToString()
                 });
             }
         }
@@ -121,7 +122,7 @@ namespace Panacea.Modules.DeveloperPanel
             Logs = new ObservableCollection<Log>();
             foreach (var log in _logger.Logs.ToList())
             {
-                Logs.Add(log);
+                Logs.Insert(0, log);
             }
         }
 
@@ -129,7 +130,7 @@ namespace Panacea.Modules.DeveloperPanel
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                Logs.Add(e);
+                Logs.Insert(0, e);
             }), DispatcherPriority.Background);
             
         }

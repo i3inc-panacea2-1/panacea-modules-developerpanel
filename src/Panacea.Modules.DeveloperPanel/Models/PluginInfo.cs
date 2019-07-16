@@ -13,7 +13,7 @@ namespace Panacea.Modules.DeveloperPanel.Models
     {
         public PluginInfo()
         {
-            IsInitialized = false;
+            IsInitialized = true;
 
         }
 
@@ -37,7 +37,7 @@ namespace Panacea.Modules.DeveloperPanel.Models
             get
             {
                 if (!IsInitialized) return Brushes.Red;
-                if (Version != RealVersion) return Brushes.LightSalmon;
+                //if (Version != RealVersion) return Brushes.LightSalmon;
                 return Brushes.LightGray;
             }
 

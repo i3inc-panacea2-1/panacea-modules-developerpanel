@@ -137,39 +137,29 @@
                                         <TextBlock
                                             Margin="2"
                                             Text="{Binding Name}"
+                                            FontSize="{DynamicResource FontSize-Large}"
                                             TextAlignment="Center" />
                                         <StackPanel
                                             Grid.Row="1"
                                             HorizontalAlignment="Center"
-                                            Orientation="Horizontal">
+                                            Orientation="Horizontal"
+                                            TextElement.FontSize="{DynamicResource FontSize-Small}">
                                             <TextBlock
                                                 Margin="2"
-                                                Text="Server:"
+                                                Text="Version:"
                                                 TextAlignment="Center" />
                                             <TextBlock
                                                 Margin="2"
                                                 Text="{Binding Version}"
                                                 TextAlignment="Center" />
-                                            <TextBlock
-                                                Margin="2"
-                                                Text=" - "
-                                                TextAlignment="Center" />
-                                            <TextBlock
-                                                Margin="2"
-                                                Text="Loaded:"
-                                                TextAlignment="Center" />
-                                            <TextBlock
-                                                Margin="2"
-                                                Text="{Binding RealVersion}"
-                                                TextAlignment="Center" />
                                         </StackPanel>
-                                        <TextBlock
+                                        <!--<TextBlock
                                             Grid.Row="2"
                                             MaxHeight="200"
                                             Margin="2"
                                             Text="{Binding Error}"
                                             TextAlignment="Left"
-                                            TextWrapping="Wrap" />
+                                            TextWrapping="Wrap" />-->
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
