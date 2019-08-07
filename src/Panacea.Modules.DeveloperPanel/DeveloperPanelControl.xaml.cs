@@ -24,5 +24,10 @@ namespace Panacea.Modules.DeveloperPanel
         {
             InitializeComponent();
         }
+
+        private void GcButton_Click(object sender, RoutedEventArgs e)
+        {
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
+        }
     }
 }

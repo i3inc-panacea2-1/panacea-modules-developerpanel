@@ -122,6 +122,7 @@
                         Margin="15,2,2,2"
                         Fill="Red" />
                     <TextBlock Margin="5" Text="Not loaded" />
+                    <Button Name="GcButton" Margin="20 0 0 0" Click="GcButton_Click">GC Collect</Button>
                 </StackPanel>
                 <pcontrols:Card Grid.Row="1" Margin="10">
                     <ScrollViewer HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly">
