@@ -18,7 +18,7 @@ namespace Panacea.Modules.DeveloperPanel
     [View(typeof(DeveloperPanelControl))]
     class DeveloperPanelControlViewModel : ViewModelBase
     {
-        
+
         private readonly ILogger _logger;
         private readonly PanaceaServices _core;
         ObservableCollection<Log> _logs;
@@ -71,7 +71,7 @@ namespace Panacea.Modules.DeveloperPanel
                     Content = this.View
                 };
                 w.Show();
-                if(_core.TryGetUiManager(out IUiManager ui))
+                if (_core.TryGetUiManager(out IUiManager ui))
                 {
                     ui.GoHome();
                 }
@@ -104,7 +104,7 @@ namespace Panacea.Modules.DeveloperPanel
         void LoadPlugins()
         {
             Plugins = new ObservableCollection<PluginInfo>();
-            foreach(var p in _core.PluginLoader.LoadedPlugins)
+            foreach (var p in _core.PluginLoader.LoadedPlugins)
             {
                 Plugins.Add(new PluginInfo()
                 {
@@ -125,14 +125,37 @@ namespace Panacea.Modules.DeveloperPanel
                 Logs.Insert(0, log);
             }
         }
-
+        string _searchTerm = "";
+        public string SearchTerm
+        {
+            get => _searchTerm;
+            set
+            {
+                _searchTerm = value;
+                Logs = new ObservableCollection<Log>();
+                var term = _searchTerm.ToLower();
+                foreach (var log in _logger.Logs.ToList())
+                {
+                    if (log.Message.ToLower().Contains(term)
+                        || log.Sender.ToLower().Contains(term))
+                    {
+                        Logs.Insert(0, log);
+                    }
+                }
+            }
+        }
         private void _logger_OnLog(object sender, Log e)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                Logs.Insert(0, e);
+                var term = _searchTerm.ToLower();
+                if (e.Message.ToLower().Contains(term)
+                       || e.Sender.ToLower().Contains(term))
+                {
+                    Logs.Insert(0, e);
+                }
             }), DispatcherPriority.Background);
-            
+
         }
     }
 }

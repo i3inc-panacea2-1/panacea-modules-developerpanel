@@ -29,5 +29,7 @@ namespace Panacea.Modules.DeveloperPanel
         {
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
         }
+
+        
     }
 }

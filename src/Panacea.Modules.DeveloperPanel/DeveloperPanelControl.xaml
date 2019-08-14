@@ -80,10 +80,11 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <ComboBox
+                <TextBox
                     Name="types"
                     Margin="12,2"
-                    pcontrols:Material.Label="Filter" />
+                    pcontrols:Material.Label="Filter"
+                    Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" />
                 <pcontrols:Card Grid.Row="1" Margin="10">
                     <ListView x:Name="listView" ItemsSource="{Binding Logs}">
                         <ListView.View>
@@ -122,7 +123,12 @@
                         Margin="15,2,2,2"
                         Fill="Red" />
                     <TextBlock Margin="5" Text="Not loaded" />
-                    <Button Name="GcButton" Margin="20 0 0 0" Click="GcButton_Click">GC Collect</Button>
+                    <Button
+                        Name="GcButton"
+                        Margin="20,0,0,0"
+                        Click="GcButton_Click">
+                        GC Collect
+                    </Button>
                 </StackPanel>
                 <pcontrols:Card Grid.Row="1" Margin="10">
                     <ScrollViewer HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly">
@@ -137,8 +143,8 @@
                                         </Grid.RowDefinitions>
                                         <TextBlock
                                             Margin="2"
-                                            Text="{Binding Name}"
                                             FontSize="{DynamicResource FontSize-Large}"
+                                            Text="{Binding Name}"
                                             TextAlignment="Center" />
                                         <StackPanel
                                             Grid.Row="1"
