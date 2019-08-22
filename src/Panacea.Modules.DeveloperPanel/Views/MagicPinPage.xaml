@@ -15,6 +15,7 @@
     </UserControl.Resources>
     <StackPanel  VerticalAlignment="Center">
         <StackPanel VerticalAlignment="Center">
+            <Image Source="{Binding Frame}" Height="200" />
             <TextBlock
                 Margin="10"
                 FontSize="{DynamicResource FontSize-Xx-Large}"
