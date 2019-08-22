@@ -43,14 +43,11 @@ namespace Panacea.Modules.DeveloperPanel
                 };
                 w.Show();
             }
-            else
+            if (_core.TryGetUiManager(out IUiManager ui))
             {
-                if (_core.TryGetUiManager(out IUiManager ui))
-                {
                 ui.PreviewKeyDown += Ui_PreviewKeyDown;
                 _button = new NavigationButtonViewModel(_core, this);
                 ui.AddNavigationBarControl(_button);
-                }
             }
             return Task.CompletedTask;
         }

@@ -89,24 +89,29 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
 
         private void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            var source = (BitmapSource)Frame;
-
-            using (var bmp = BitmapSourceToBitmap2(source))
+            if (Frame == null) return;
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                Result result = _reader.Decode(bmp);
-                try
+                var source = (BitmapSource)Frame;
+
+                using (var bmp = BitmapSourceToBitmap2(source))
                 {
-                    string decoded = result.ToString().Trim();
-                    if (decoded != "")
+                    Result result = _reader.Decode(bmp);
+                    try
                     {
-                        _timer.Stop();
+                        string decoded = result.ToString().Trim();
+                        if (decoded != "")
+                        {
+                            _timer.Stop();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
                     }
                 }
-                catch (Exception ex)
-                {
-
-                }
-            }
+            });
+           
         }
 
         public override void Activate()
@@ -144,12 +149,17 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
             {
                 bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
                 memory.Position = 0;
-                BitmapImage bitmapimage = new BitmapImage();
-                bitmapimage.BeginInit();
-                bitmapimage.StreamSource = memory;
-                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapimage.EndInit();
-                Frame = bitmapimage;
+              
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    BitmapImage bitmapimage = new BitmapImage();
+                    bitmapimage.BeginInit();
+                    bitmapimage.StreamSource = memory;
+                    bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapimage.EndInit();
+                    Frame = bitmapimage;
+                });
+              
             }
 
         }
