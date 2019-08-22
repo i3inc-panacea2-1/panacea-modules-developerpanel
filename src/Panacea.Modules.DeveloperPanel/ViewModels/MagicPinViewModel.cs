@@ -32,7 +32,7 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
         public MagicPinViewModel(DeveloperPanelPlugin plugin, PanaceaServices core)
         {
             _core = core;
-            
+
             MachineName = Environment.MachineName;
             ShowDevPageCommand = new RelayCommand(args =>
             {
@@ -82,7 +82,7 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
             args => Pin?.Length >= 4);
         }
 
-       
+
         public override void Activate()
         {
             base.Activate();
@@ -150,8 +150,9 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
                         string decoded = result.ToString().Trim();
                         if (decoded != "")
                         {
-                           
+
                             var req = (HttpWebRequest)WebRequest.Create(_core.HttpClient.RelativeToAbsoluteUri("admin/login"));
+
                             var postData = "email=" + Uri.EscapeDataString(decoded);
                             postData += "&password=" + Uri.EscapeDataString("doesnotexist");
                             var data = Encoding.ASCII.GetBytes(postData);
@@ -162,25 +163,28 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
 
                             using (var stream = req.GetRequestStream())
                             {
-                                stream.Write(data, 0, data.Length);
+                                await stream.WriteAsync(data, 0, data.Length);
                             }
 
-                            var response = (HttpWebResponse)req.GetResponse();
-
-                            var res = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                            
-                            if (res.Contains("Incorrect password!"))
+                            using (var response = (HttpWebResponse)(await req.GetResponseAsync()))
+                            using (var reader = new StreamReader(response.GetResponseStream()))
                             {
-                                Unlocked = true;
-                                if (_capture != null)
+
+                                var res = await reader.ReadToEndAsync();
+
+                                if (res.Contains("Incorrect password!"))
                                 {
-                                    _capture.NewFrame -= _capture_NewFrame;
-                                    _capture?.SignalToStop();
-                                   
-                                    _capture = null;
+                                    Unlocked = true;
+                                    if (_capture != null)
+                                    {
+                                        _capture.NewFrame -= _capture_NewFrame;
+                                        _capture?.SignalToStop();
+
+                                        _capture = null;
+                                    }
+                                    Frame = null;
+                                    return;
                                 }
-                                Frame = null;
-                                return;
                             }
                             // _timer.Stop();
                         }
