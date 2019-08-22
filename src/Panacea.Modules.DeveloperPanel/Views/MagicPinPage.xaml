@@ -22,38 +22,8 @@
                 Foreground="White"
                 Text="{Binding MachineName}"
                 TextAlignment="Center" />
-            <TextBlock
-                Margin="10"
-                FontSize="{DynamicResource FontSize-Large}"
-                Foreground="White"
-                Text="Please type the magic PIN"
-                TextAlignment="Center"
-                TextWrapping="Wrap" />
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <TextBox
-                    Width="120"
-                    HorizontalAlignment="Center"
-                    pcontrols:Material.Label="PIN"
-                    FontSize="{DynamicResource FontSize-Large}"
-                    Foreground="White"
-                    InputScope="Number"
-                    Text="{Binding Pin, UpdateSourceTrigger=PropertyChanged}" />
-                <Button
-                    Margin="10,0,0,0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Background="#233"
-                    Command="{Binding UnlockCommand}"
-                    Content="Submit"
-                    Foreground="White" />
-            </StackPanel>
-
-            <TextBlock
-                FontSize="{DynamicResource FontSize-Large}"
-                Foreground="Red"
-                Text="{Binding Error}"
-                TextAlignment="Center"
-                TextWrapping="Wrap" />
+            
+           
 
         </StackPanel>
         <StackPanel

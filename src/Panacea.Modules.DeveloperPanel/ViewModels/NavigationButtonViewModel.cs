@@ -21,7 +21,7 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
             {
                 if (core.TryGetUiManager(out IUiManager ui))
                 {
-                    ui.Navigate(new MagicPinViewModel(plugin), false);
+                    ui.Navigate(new MagicPinViewModel(plugin, core), false);
                 }
             });
         }

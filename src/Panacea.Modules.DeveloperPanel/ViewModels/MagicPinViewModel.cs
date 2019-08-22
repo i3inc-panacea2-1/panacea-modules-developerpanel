@@ -1,5 +1,6 @@
 ﻿using AForge.Video.DirectShow;
 using Panacea.Controls;
+using Panacea.Core;
 using Panacea.Modules.DeveloperPanel.Views;
 using Panacea.Mvvm;
 using System;
@@ -8,6 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -26,18 +28,11 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
         BarcodeReader _reader = new BarcodeReader();
         VideoCaptureDevice _capture;
 
-        Timer _timer = new Timer();
-        public MagicPinViewModel(DeveloperPanelPlugin plugin)
-        {
-            _timer.Interval = 500;
-            _timer.Elapsed += _timer_Elapsed;
-            var devs = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            if (devs.Count > 0)
-            {
-                _capture = new VideoCaptureDevice(devs[0].MonikerString);
-                _capture.NewFrame += _capture_NewFrame;
 
-            }
+        public MagicPinViewModel(DeveloperPanelPlugin plugin, PanaceaServices core)
+        {
+            _core = core;
+            
             MachineName = Environment.MachineName;
             ShowDevPageCommand = new RelayCommand(args =>
             {
@@ -87,40 +82,21 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
             args => Pin?.Length >= 4);
         }
 
-        private void _timer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            if (Frame == null) return;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                var source = (BitmapSource)Frame;
-
-                using (var bmp = BitmapSourceToBitmap2(source))
-                {
-                    Result result = _reader.Decode(bmp);
-                    try
-                    {
-                        string decoded = result.ToString().Trim();
-                        if (decoded != "")
-                        {
-                            _timer.Stop();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                }
-            });
-           
-        }
-
+       
         public override void Activate()
         {
             base.Activate();
+            var devs = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            if (devs.Count > 0)
+            {
+                _capture = new VideoCaptureDevice(devs[0].MonikerString);
+                _capture.NewFrame += _capture_NewFrame;
+
+            }
             if (_capture != null)
             {
                 _capture.Start();
-                _timer.Start();
+
             }
 
         }
@@ -128,8 +104,12 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
         public override void Deactivate()
         {
             base.Deactivate();
-            _timer.Stop();
-            _capture?.Stop();
+            if (_capture != null)
+            {
+                _capture.NewFrame -= _capture_NewFrame;
+                _capture?.SignalToStop();
+                _capture = null;
+            }
         }
 
         BitmapImage _frame;
@@ -142,14 +122,15 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
                 OnPropertyChanged();
             }
         }
-        private void _capture_NewFrame(object sender, AForge.Video.NewFrameEventArgs eventArgs)
+        private async void _capture_NewFrame(object sender, AForge.Video.NewFrameEventArgs eventArgs)
         {
+            _capture.NewFrame -= _capture_NewFrame;
             using (var bitmap = (Bitmap)eventArgs.Frame.Clone())
             using (var memory = new MemoryStream())
             {
                 bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
                 memory.Position = 0;
-              
+
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     BitmapImage bitmapimage = new BitmapImage();
@@ -159,8 +140,59 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
                     bitmapimage.EndInit();
                     Frame = bitmapimage;
                 });
-              
+
+
+                Result result = _reader.Decode(bitmap);
+                if (result != null)
+                {
+                    try
+                    {
+                        string decoded = result.ToString().Trim();
+                        if (decoded != "")
+                        {
+                           
+                            var req = (HttpWebRequest)WebRequest.Create(_core.HttpClient.RelativeToAbsoluteUri("admin/login"));
+                            var postData = "email=" + Uri.EscapeDataString(decoded);
+                            postData += "&password=" + Uri.EscapeDataString("doesnotexist");
+                            var data = Encoding.ASCII.GetBytes(postData);
+
+                            req.Method = "POST";
+                            req.ContentType = "application/x-www-form-urlencoded";
+                            req.ContentLength = data.Length;
+
+                            using (var stream = req.GetRequestStream())
+                            {
+                                stream.Write(data, 0, data.Length);
+                            }
+
+                            var response = (HttpWebResponse)req.GetResponse();
+
+                            var res = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                            
+                            if (res.Contains("Incorrect password!"))
+                            {
+                                Unlocked = true;
+                                if (_capture != null)
+                                {
+                                    _capture.NewFrame -= _capture_NewFrame;
+                                    _capture?.SignalToStop();
+                                   
+                                    _capture = null;
+                                }
+                                Frame = null;
+                                return;
+                            }
+                            // _timer.Stop();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+
             }
+            _capture.NewFrame += _capture_NewFrame;
 
         }
 
@@ -195,6 +227,8 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
         public ICommand StartLauncherCommand { get; }
 
         bool _unlocked;
+        private readonly PanaceaServices _core;
+
         public bool Unlocked
         {
             get => _unlocked;
