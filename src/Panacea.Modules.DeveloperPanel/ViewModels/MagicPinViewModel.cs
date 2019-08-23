@@ -204,8 +204,8 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
                                     return;
                                 }
                             }
-                            // _timer.Stop();
-                        }*/
+                            // _timer.Stop();*/
+                        }
                     }
                     catch (Exception ex)
                     {
