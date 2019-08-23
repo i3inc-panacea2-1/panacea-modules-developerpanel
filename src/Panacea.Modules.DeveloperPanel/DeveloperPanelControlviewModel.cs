@@ -8,9 +8,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Threading;
 
 namespace Panacea.Modules.DeveloperPanel
@@ -31,6 +33,9 @@ namespace Panacea.Modules.DeveloperPanel
                 OnPropertyChanged();
             }
         }
+
+        public ObservableCollection<KeyValuePair<string, string>> Arguments { get; set; } = new ObservableCollection<KeyValuePair<string, string>>();
+
         ObservableCollection<PluginInfo> _plugins;
         public ObservableCollection<PluginInfo> Plugins
         {
@@ -46,6 +51,22 @@ namespace Panacea.Modules.DeveloperPanel
         {
             _logger = core.Logger;
             _core = core;
+            Arguments.Add(new KeyValuePair<string, string>("Server", _core.HttpClient.RelativeToAbsoluteUri("")));
+            Arguments.Add(new KeyValuePair<string, string>("PUTIK", _core.HttpClient.GetApiEndpoint("")));
+            Arguments.Add(new KeyValuePair<string, string>("Arguments", string.Join("\r\n", Environment.GetCommandLineArgs())));
+            foreach (var netInterface in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                var sb = new StringBuilder();
+                IPInterfaceProperties ipProps = netInterface.GetIPProperties();
+                foreach (UnicastIPAddressInformation addr in ipProps.UnicastAddresses)
+                {
+                    sb.AppendLine(addr.Address.ToString());
+                }
+                Arguments.Add(new KeyValuePair<string, string>("Network: " + netInterface.Name, sb.ToString()));
+                
+                
+                Console.WriteLine("");
+            }
             SetupCommands();
         }
 
@@ -156,6 +177,30 @@ namespace Panacea.Modules.DeveloperPanel
                 }
             }), DispatcherPriority.Background);
 
+        }
+    }
+
+
+    public class EnumToStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            string EnumString;
+            try
+            {
+                EnumString = Enum.GetName((value.GetType()), value);
+                return EnumString;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        // No need to implement converting back on a one-way binding 
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

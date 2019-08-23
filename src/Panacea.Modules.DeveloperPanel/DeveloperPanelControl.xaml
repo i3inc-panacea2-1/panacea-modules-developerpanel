@@ -24,7 +24,7 @@
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <pcontrols:Card Margin="10">
-                    <ListView Name="generalLst" BorderThickness="0">
+                    <ListView BorderThickness="0" ItemsSource="{Binding Arguments}">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn
@@ -87,12 +87,22 @@
                     Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" />
                 <pcontrols:Card Grid.Row="1" Margin="10">
                     <ListView x:Name="listView" ItemsSource="{Binding Logs}">
+                        <ListView.Resources>
+                            <local:EnumToStringConverter x:Key="EnumToStringConverter" />
+                        </ListView.Resources>
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn DisplayMemberBinding="{Binding Time}" Header="Id" />
                                 <GridViewColumn DisplayMemberBinding="{Binding Sender}" Header="Sender" />
+                                <GridViewColumn Header="Type">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Verbosity, Converter={StaticResource EnumToStringConverter}}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                                 <GridViewColumn DisplayMemberBinding="{Binding Message}" Header="Message" />
-                                <GridViewColumn DisplayMemberBinding="{Binding LogType}" Header="Type" />
+
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -183,98 +193,7 @@
 
         </TabItem>
 
-        <TabItem Header="Hardware">
-            <TabControl pcontrols:Material.HighlightEnabled="True">
-                <TabControl.Resources>
-                    <Style TargetType="{x:Type TabPanel}">
-                        <Setter Property="HorizontalAlignment" Value="Center" />
-                    </Style>
-                </TabControl.Resources>
-                <TabItem Header="Unit">
-                    <pcontrols:Card HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <StackPanel Margin="30" HorizontalAlignment="Center">
-                            <TextBlock
-                                Name="unitType"
-                                Margin="10"
-                                TextAlignment="Center" />
-                            <CheckBox
-                                Name="led"
-                                Margin="10"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                Content="LED">
-                                <CheckBox.LayoutTransform>
-                                    <ScaleTransform ScaleX="3" ScaleY="3" />
-                                </CheckBox.LayoutTransform>
-                            </CheckBox>
-                            <CheckBox
-                                Name="handset"
-                                Margin="10"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                Content="Handset"
-                                IsEnabled="False">
-                                <CheckBox.LayoutTransform>
-                                    <ScaleTransform ScaleX="3" ScaleY="3" />
-                                </CheckBox.LayoutTransform>
-                            </CheckBox>
-                            <Button Name="BtnStartRinging" Content="Start Ringing" />
-                            <Button Name="BtnStopRinging" Content="Stop Ringing" />
-                            <Button
-                                Name="BtnRestart"
-                                Margin="0,10"
-                                Content="Restart" />
-                        </StackPanel>
-                    </pcontrols:Card>
-                </TabItem>
-                <TabItem Header="Rfid Readers">
 
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <TextBlock
-                            Name="rfidreaders"
-                            Margin="10"
-                            TextAlignment="Center" />
-                        <pcontrols:Card Grid.Row="1" Margin="10,0">
-                            <ListView Name="readers">
-                                <ListView.View>
-                                    <GridView>
-                                        <GridViewColumn
-                                            Width="250"
-                                            DisplayMemberBinding="{Binding Name}"
-                                            Header="Reader" />
-                                        <GridViewColumn
-                                            Width="350"
-                                            DisplayMemberBinding="{Binding Card}"
-                                            Header="Card" />
-
-                                    </GridView>
-                                </ListView.View>
-                            </ListView>
-                        </pcontrols:Card>
-
-                        <StackPanel
-                            Grid.Row="2"
-                            HorizontalAlignment="Center"
-                            Orientation="Horizontal">
-
-                            <Button
-                                Name="simulateCardTap"
-                                Margin="2"
-                                VerticalAlignment="Center"
-                                Content="Tap card!" />
-                        </StackPanel>
-                    </Grid>
-                </TabItem>
-            </TabControl>
-
-        </TabItem>
         <TabItem Header="Web Sockets">
             <pcontrols:Card
                 Margin="250,10"
@@ -329,43 +248,7 @@
             </pcontrols:Card>
         </TabItem>
 
-        <TabItem Name="MasterSlaveTab" Header="Terminal Connection">
-            <pcontrols:Card HorizontalAlignment="Center" VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock
-                        Name="TerminalIp"
-                        Margin="5"
-                        VerticalAlignment="Center"
-                        Text="" />
-                    <TextBlock
-                        Name="TerminalRoleText"
-                        Margin="5"
-                        VerticalAlignment="Center"
-                        Text="" />
-                    <Rectangle
-                        Name="LineTerminalConnection"
-                        Width="100"
-                        Height="8"
-                        Margin="5,10,5,10"
-                        HorizontalAlignment="Center"
-                        Fill="Yellow"
-                        Stroke="Transparent" />
 
-                    <TextBlock
-                        Name="RemoteTerminalText"
-                        Margin="5"
-                        VerticalAlignment="Center"
-                        Text="" />
-                    <TextBlock
-                        Name="RemoteTerminalIp"
-                        Margin="5"
-                        VerticalAlignment="Center"
-                        Text="" />
-
-
-                </StackPanel>
-            </pcontrols:Card>
-        </TabItem>
 
         <TabItem Header="Console">
             <Grid>
@@ -436,82 +319,7 @@
             </Grid>
 
         </TabItem>
-        <TabItem Header="Ticketing">
-            <Grid Background="#f6f6f6">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
 
-                </Grid.RowDefinitions>
-                <ScrollViewer>
-                    <pcontrols:Card Margin="250,10">
-                        <Grid Grid.Row="1" VerticalAlignment="Top">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="2*" />
-                                <RowDefinition Height="2*" />
-                                <RowDefinition Height="auto" />
-                            </Grid.RowDefinitions>
-
-                            <ComboBox
-                                Name="cmbKey"
-                                Grid.Column="1"
-                                Margin="10"
-                                pcontrols:Material.Label="Api key"
-                                IsEditable="True"
-                                SelectedIndex="0">
-                                <ComboBox.Items>
-                                    <ComboBoxItem Content="- Please select -" />
-                                    <ComboBoxItem Content="Dot by dot" Tag="d6a834858ed5ae9e821dc86edb00f882deeb50f4" />
-                                    <ComboBoxItem Content="i3 inc" Tag="f52f7ddd18d5553927316f5a1da1a00e6eb1ae5a" />
-                                </ComboBox.Items>
-                            </ComboBox>
-
-                            <TextBox
-                                Name="txtTitle"
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Margin="10"
-                                VerticalAlignment="Stretch"
-                                VerticalContentAlignment="Center"
-                                pcontrols:Material.Label="Subject"
-                                AcceptsReturn="False" />
-
-                            <TextBox
-                                Name="txtDescription"
-                                Grid.Row="2"
-                                Grid.Column="1"
-                                Margin="10"
-                                VerticalAlignment="Stretch"
-                                pcontrols:Material.Label="Descritpion"
-                                AcceptsReturn="True"
-                                ScrollViewer.VerticalScrollBarVisibility="Visible" />
-
-                            <TextBox
-                                Name="txtSteps"
-                                Grid.Row="3"
-                                Grid.Column="1"
-                                Margin="10"
-                                VerticalAlignment="Stretch"
-                                pcontrols:Material.Label="Steps to reproduce (1 per line)"
-                                AcceptsReturn="True"
-                                ScrollViewer.VerticalScrollBarVisibility="Visible" />
-
-                        </Grid>
-                    </pcontrols:Card>
-                </ScrollViewer>
-                <Button
-                    Grid.Row="1"
-                    Margin="10"
-                    HorizontalAlignment="Center"
-                    Style="{DynamicResource PrimaryButton}">
-                    Submit
-                </Button>
-
-            </Grid>
-
-        </TabItem>
     </TabControl>
 
 </UserControl>
