@@ -7,15 +7,19 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using ZXing;
@@ -150,7 +154,21 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
                         string decoded = result.ToString().Trim();
                         if (decoded != "")
                         {
+                            var decr = _core.HttpClient.RelativeToAbsoluteUri("");
+                            if (decr == decoded)
+                            {
+                                Unlocked = true;
+                                if (_capture != null)
+                                {
+                                    _capture.NewFrame -= _capture_NewFrame;
+                                    _capture?.SignalToStop();
 
+                                    _capture = null;
+                                }
+                                Frame = null;
+                                return;
+                            }
+                            /*
                             var req = (HttpWebRequest)WebRequest.Create(_core.HttpClient.RelativeToAbsoluteUri("admin/login"));
 
                             var postData = "email=" + Uri.EscapeDataString(decoded);
@@ -187,18 +205,22 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
                                 }
                             }
                             // _timer.Stop();
-                        }
+                        }*/
                     }
                     catch (Exception ex)
                     {
 
                     }
+                    Frame = null;
+                    await Task.Delay(2000);
                 }
 
             }
             _capture.NewFrame += _capture_NewFrame;
 
         }
+
+
 
         string _pin;
         public string Pin
@@ -243,6 +265,25 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
             }
         }
 
+
+        public string CalculateMD5Hash(string input)
+        {
+            // step 1, calculate MD5 hash from input
+            MD5 md5 = System.Security.Cryptography.MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+            byte[] hash = md5.ComputeHash(inputBytes);
+
+            // step 2, convert byte array to hex string
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+            return sb.ToString();
+        }
+
+
+
         public static System.Drawing.Bitmap BitmapSourceToBitmap2(BitmapSource srs)
         {
             int width = srs.PixelWidth;
@@ -265,6 +306,20 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
                 if (ptr != IntPtr.Zero)
                     Marshal.FreeHGlobal(ptr);
             }
+        }
+    }
+
+    class NotBooltoVisConverter : IValueConverter
+    {
+        BooleanToVisibilityConverter _con = new BooleanToVisibilityConverter();
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return _con.Convert(!(bool)value, targetType, parameter, culture);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

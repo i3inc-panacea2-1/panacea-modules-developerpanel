@@ -6,24 +6,29 @@
     xmlns:local="clr-namespace:Panacea.Modules.DeveloperPanel.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pcontrols="clr-namespace:Panacea.Controls;assembly=Panacea.Controls"
+    xmlns:viewmodels="clr-namespace:Panacea.Modules.DeveloperPanel.ViewModels"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Background="#344"
     mc:Ignorable="d">
     <UserControl.Resources>
+        <viewmodels:NotBooltoVisConverter x:Key="NotBoolToVis"/>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </UserControl.Resources>
     <StackPanel  VerticalAlignment="Center">
         <StackPanel VerticalAlignment="Center">
-            <Image Source="{Binding Frame}" Height="200" />
+            
             <TextBlock
                 Margin="10"
                 FontSize="{DynamicResource FontSize-Xx-Large}"
                 Foreground="White"
                 Text="{Binding MachineName}"
                 TextAlignment="Center" />
-            
-           
+
+            <Grid  Visibility="{Binding Unlocked, Converter={StaticResource NotBoolToVis}}">
+                <ProgressBar IsIndeterminate="True" Foreground="White"/>
+                <Image Source="{Binding Frame}" Height="200" />
+            </Grid>
 
         </StackPanel>
         <StackPanel
