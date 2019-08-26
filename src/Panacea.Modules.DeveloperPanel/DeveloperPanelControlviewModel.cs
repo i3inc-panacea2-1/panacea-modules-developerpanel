@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -63,8 +64,8 @@ namespace Panacea.Modules.DeveloperPanel
                     sb.AppendLine(addr.Address.ToString());
                 }
                 Arguments.Add(new KeyValuePair<string, string>("Network: " + netInterface.Name, sb.ToString()));
-                
-                
+
+
                 Console.WriteLine("");
             }
             SetupCommands();
@@ -87,17 +88,42 @@ namespace Panacea.Modules.DeveloperPanel
             });
             OpenInWindowCommand = new RelayCommand(args =>
             {
-                var w = new Window()
-                {
-                    Content = this.View
-                };
-                w.Show();
                 if (_core.TryGetUiManager(out IUiManager ui))
                 {
                     ui.GoHome();
                 }
+                var w = new Window()
+                {
+                    Content = new DeveloperPanelControlViewModel(_core).View
+                };
+                w.Show();
+
+            });
+
+            ExecuteCodeCommand = new RelayCommand(async args =>
+            {
+                try
+                {
+                    var ass = CodeHelper.CompileSourceCodeDom(Code);
+                    await CodeHelper.ExecuteFromAssembly(ass, _core);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             });
         }
+        string _code;
+        public string Code
+        {
+            get => _code;
+            set
+            {
+                _code = value;
+                OnPropertyChanged();
+            }
+        }
+
         private void ShutDownSafe()
         {
             if (Application.Current.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
@@ -111,6 +137,9 @@ namespace Panacea.Modules.DeveloperPanel
         public RelayCommand RestartCommand { get; set; }
         public RelayCommand RestartWithUserCommand { get; set; }
         public RelayCommand OpenInWindowCommand { get; set; }
+
+        public RelayCommand ExecuteCodeCommand { get; set; }
+
         public override void Activate()
         {
             HookLogs();
