@@ -30,6 +30,12 @@ namespace Panacea.Modules.DeveloperPanel
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
         }
 
-        
+        private void Input_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.F5)
+            {
+                RunMenu.Command.Execute(null);
+            }
+        }
     }
 }

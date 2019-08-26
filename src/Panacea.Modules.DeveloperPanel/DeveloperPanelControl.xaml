@@ -256,7 +256,7 @@
                 <DockPanel>
 
                     <Menu DockPanel.Dock="Top">
-                        <MenuItem Command="{Binding ExecuteCodeCommand}" ToolTip="Execute code.">
+                        <MenuItem Command="{Binding ExecuteCodeCommand}" ToolTip="Execute code." Name="RunMenu">
                             <MenuItem.Header>
                                 <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                                     <Image
@@ -283,6 +283,7 @@
                         FontSize="10pt"
                         ShowLineNumbers="True"
                         SyntaxHighlighting="C#"
+                        PreviewKeyUp="Input_PreviewKeyUp"
                         WordWrap="True">
                         <i:Interaction.Behaviors>
                             <local:AvalonEditBehaviour GiveMeTheText="{Binding Code, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
