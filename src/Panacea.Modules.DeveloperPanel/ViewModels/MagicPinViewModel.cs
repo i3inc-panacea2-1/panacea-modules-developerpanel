@@ -216,7 +216,8 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
                 }
 
             }
-            _capture.NewFrame += _capture_NewFrame;
+            if(_capture!=null)
+                _capture.NewFrame += _capture_NewFrame;
 
         }
 
