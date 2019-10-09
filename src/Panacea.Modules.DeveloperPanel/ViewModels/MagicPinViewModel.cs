@@ -134,17 +134,19 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
             {
                 bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
                 memory.Position = 0;
-
-                Application.Current.Dispatcher.Invoke(() =>
+                try
                 {
-                    BitmapImage bitmapimage = new BitmapImage();
-                    bitmapimage.BeginInit();
-                    bitmapimage.StreamSource = memory;
-                    bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmapimage.EndInit();
-                    Frame = bitmapimage;
-                });
-
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        BitmapImage bitmapimage = new BitmapImage();
+                        bitmapimage.BeginInit();
+                        bitmapimage.StreamSource = memory;
+                        bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmapimage.EndInit();
+                        Frame = bitmapimage;
+                    });
+                }
+                catch (TaskCanceledException) { }
 
                 Result result = _reader.Decode(bitmap);
                 if (result != null)
@@ -216,7 +218,7 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
                 }
 
             }
-            if(_capture!=null)
+            if (_capture != null)
                 _capture.NewFrame += _capture_NewFrame;
 
         }
