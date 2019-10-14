@@ -12,27 +12,46 @@
     Background="#344"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <viewmodels:NotBooltoVisConverter x:Key="NotBoolToVis"/>
+        <viewmodels:NotBooltoVisConverter x:Key="NotBoolToVis" />
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </UserControl.Resources>
-    <StackPanel  VerticalAlignment="Center">
-        <StackPanel VerticalAlignment="Center">
-            
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
             <TextBlock
-                Margin="10"
+                Margin="10,30,10,10"
                 FontSize="{DynamicResource FontSize-Xx-Large}"
                 Foreground="White"
                 Text="{Binding MachineName}"
                 TextAlignment="Center" />
 
-            <Grid  Visibility="{Binding Unlocked, Converter={StaticResource NotBoolToVis}}">
-                <ProgressBar IsIndeterminate="True" Foreground="White"/>
-                <Image Source="{Binding Frame}" Height="200" />
+            <TextBlock
+                Grid.Row="1"
+                Margin="5"
+                FontSize="{DynamicResource FontSize-Normal}"
+                Foreground="#f1f1f1"
+                Text="{Binding Result}"
+                TextAlignment="Center" />
+
+            <Grid
+                Grid.Row="2"
+                Margin="20,0,20,50"
+                Visibility="{Binding Unlocked, Converter={StaticResource NotBoolToVis}}">
+                <ProgressBar Foreground="White" IsIndeterminate="True" />
+                <pcontrols:Card HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="{Binding Frame}" />
+                </pcontrols:Card>
             </Grid>
 
-        </StackPanel>
+        </Grid>
         <StackPanel
             HorizontalAlignment="Center"
+            VerticalAlignment="Center"
             Orientation="Horizontal"
             Visibility="{Binding Unlocked, Converter={StaticResource BoolToVis}}">
             <Button
@@ -51,5 +70,5 @@
                 FontSize="{DynamicResource FontSize-Large}"
                 Foreground="White" />
         </StackPanel>
-    </StackPanel>
+    </Grid>
 </UserControl>

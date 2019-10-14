@@ -90,6 +90,7 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
         public override void Activate()
         {
             base.Activate();
+            Result = "Scan your badge to unlock...";
             var devs = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             if (devs.Count > 0)
             {
@@ -168,8 +169,17 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
                                     _capture = null;
                                 }
                                 Frame = null;
+                                Result = "Unlocked!";
                                 return;
                             }
+                            Result = "Validating...";
+                            Frame = null;
+                            await Task.Delay(2000);
+                            
+                            
+                            Result = "Scan verification failed.";
+                            await Task.Delay(2000);
+                            Result = "Scan your badge to unlock...";
                             /*
                             var req = (HttpWebRequest)WebRequest.Create(_core.HttpClient.RelativeToAbsoluteUri("admin/login"));
 
@@ -213,8 +223,7 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
                     {
 
                     }
-                    Frame = null;
-                    await Task.Delay(2000);
+                   
                 }
 
             }
@@ -243,6 +252,17 @@ namespace Panacea.Modules.DeveloperPanel.ViewModels
             set
             {
                 _error = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string _result;
+        public string Result
+        {
+            get => _result;
+            set
+            {
+                _result = value;
                 OnPropertyChanged();
             }
         }
