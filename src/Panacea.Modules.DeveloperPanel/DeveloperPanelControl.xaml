@@ -9,6 +9,7 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     Background="#f4f4f4"
+    FontSize="14"
     mc:Ignorable="d">
     <TabControl pcontrols:Material.HighlightEnabled="True">
         <TabControl.Resources>
