@@ -196,7 +196,7 @@ namespace Panacea.Modules.DeveloperPanel
         }
         private void _logger_OnLog(object sender, Log e)
         {
-            if (Application.Current.Dispatcher != null)
+            if (Application.Current != null)
             {
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
