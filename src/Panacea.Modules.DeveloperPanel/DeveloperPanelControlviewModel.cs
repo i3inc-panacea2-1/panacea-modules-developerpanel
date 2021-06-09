@@ -196,16 +196,18 @@ namespace Panacea.Modules.DeveloperPanel
         }
         private void _logger_OnLog(object sender, Log e)
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            if (Application.Current.Dispatcher != null)
             {
-                var term = _searchTerm.ToLower();
-                if (e.Message.ToLower().Contains(term)
-                       || e.Sender.ToLower().Contains(term))
+                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    Logs.Insert(0, e);
-                }
-            }), DispatcherPriority.Background);
-
+                    var term = _searchTerm.ToLower();
+                    if (e.Message.ToLower().Contains(term)
+                           || e.Sender.ToLower().Contains(term))
+                    {
+                        Logs.Insert(0, e);
+                    }
+                }), DispatcherPriority.Background);
+            }
         }
     }
 
